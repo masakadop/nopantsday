@@ -1,3 +1,6 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { CountdownTimer } from "@/components/countdown-timer"
 import { FloatingPants } from "@/components/floating-pants"
 import { NoPantsIcon } from "@/components/pants-icon"
@@ -12,7 +15,7 @@ function getNoPantsDayInfo(): { date: Date; formatted: string; isToday: boolean 
   const daysUntilFridayThisYear = dayOfWeekThisYear <= 5 ? 5 - dayOfWeekThisYear : 7 - dayOfWeekThisYear + 5
   const firstFridayThisYear = new Date(currentYear, 4, 1 + daysUntilFridayThisYear)
   
-  // Check if today is No Pants Day
+  // Check if today is No Pants Day (using local time)
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const noPantsDayStart = new Date(firstFridayThisYear.getFullYear(), firstFridayThisYear.getMonth(), firstFridayThisYear.getDate())
   
@@ -39,7 +42,27 @@ function getNoPantsDayInfo(): { date: Date; formatted: string; isToday: boolean 
 }
 
 export default function Home() {
-  const { formatted, isToday } = getNoPantsDayInfo()
+  const [noPantsDayInfo, setNoPantsDayInfo] = useState<{ formatted: string; isToday: boolean } | null>(null)
+  
+  useEffect(() => {
+    // Calculate on client side to use local timezone
+    const info = getNoPantsDayInfo()
+    setNoPantsDayInfo({ formatted: info.formatted, isToday: info.isToday })
+  }, [])
+  
+  // Show loading state while calculating on client
+  if (!noPantsDayInfo) {
+    return (
+      <main className="relative min-h-screen flex flex-col items-center justify-center px-4 py-12 overflow-hidden">
+        <FloatingPants />
+        <div className="relative z-10 text-center">
+          <NoPantsIcon className="w-24 h-24 md:w-32 md:h-32 text-primary animate-bounce-slow mx-auto" />
+        </div>
+      </main>
+    )
+  }
+  
+  const { formatted, isToday } = noPantsDayInfo
   
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center px-4 py-12 overflow-hidden">
