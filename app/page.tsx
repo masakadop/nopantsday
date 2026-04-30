@@ -3,18 +3,30 @@ import { FloatingPants } from "@/components/floating-pants"
 import { NoPantsIcon } from "@/components/pants-icon"
 
 function getNextNoPantsDay(): { date: Date; formatted: string } {
-  const currentYear = new Date().getFullYear()
+  const now = new Date()
+  const currentYear = now.getFullYear()
+  
+  // No Pants Day is the first Friday of May
+  const may1ThisYear = new Date(currentYear, 4, 1) // Month is 0-indexed, so 4 = May
+  const dayOfWeekThisYear = may1ThisYear.getDay() // 0 = Sunday, 5 = Friday
+  const daysUntilFridayThisYear = dayOfWeekThisYear <= 5 ? 5 - dayOfWeekThisYear : 7 - dayOfWeekThisYear + 5
+  const firstFridayThisYear = new Date(currentYear, 4, 1 + daysUntilFridayThisYear)
+  
+  // If this year's No Pants Day hasn't passed, use it
+  if (firstFridayThisYear > now) {
+    const formatted = `${currentYear}年5月${firstFridayThisYear.getDate()}日（金）`
+    return { date: firstFridayThisYear, formatted }
+  }
+  
+  // Otherwise, calculate for next year
   const targetYear = currentYear + 1
+  const may1NextYear = new Date(targetYear, 4, 1)
+  const dayOfWeekNextYear = may1NextYear.getDay()
+  const daysUntilFridayNextYear = dayOfWeekNextYear <= 5 ? 5 - dayOfWeekNextYear : 7 - dayOfWeekNextYear + 5
+  const firstFridayNextYear = new Date(targetYear, 4, 1 + daysUntilFridayNextYear)
   
-  // Find first Sunday of January for target year
-  const jan1 = new Date(targetYear, 0, 1)
-  const dayOfWeek = jan1.getDay() // 0 = Sunday
-  const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
-  const firstSunday = new Date(targetYear, 0, 1 + daysUntilSunday)
-  
-  const formatted = `${targetYear}年${firstSunday.getMonth() + 1}月${firstSunday.getDate()}日`
-  
-  return { date: firstSunday, formatted }
+  const formatted = `${targetYear}年5月${firstFridayNextYear.getDate()}日（金）`
+  return { date: firstFridayNextYear, formatted }
 }
 
 export default function Home() {
@@ -38,7 +50,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            毎年1月の第1日曜日は「ノーパンツデー」！
+            毎年5月の第1金曜日は「ノーパンツデー」！
             <br className="hidden md:block" />
             世界中で電車やバスに下半身だけ下着姿で乗る
             <br className="hidden md:block" />

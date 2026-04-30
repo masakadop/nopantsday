@@ -13,17 +13,26 @@ function getNextNoPantsDay(): Date {
   const now = new Date()
   const currentYear = now.getFullYear()
   
-  // No Pants Day is typically the first Sunday of January
-  // For 2027, we'll calculate the first Sunday of January
-  let targetYear = currentYear + 1
+  // No Pants Day is the first Friday of May
+  // Find first Friday of May for current year first
+  const may1ThisYear = new Date(currentYear, 4, 1) // Month is 0-indexed, so 4 = May
+  const dayOfWeekThisYear = may1ThisYear.getDay() // 0 = Sunday, 5 = Friday
+  const daysUntilFridayThisYear = dayOfWeekThisYear <= 5 ? 5 - dayOfWeekThisYear : 7 - dayOfWeekThisYear + 5
+  const firstFridayThisYear = new Date(currentYear, 4, 1 + daysUntilFridayThisYear)
   
-  // Find first Sunday of January for target year
-  const jan1 = new Date(targetYear, 0, 1)
-  const dayOfWeek = jan1.getDay() // 0 = Sunday
-  const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
-  const firstSunday = new Date(targetYear, 0, 1 + daysUntilSunday)
+  // If this year's No Pants Day hasn't passed, use it
+  if (firstFridayThisYear > now) {
+    return firstFridayThisYear
+  }
   
-  return firstSunday
+  // Otherwise, calculate for next year
+  const targetYear = currentYear + 1
+  const may1NextYear = new Date(targetYear, 4, 1)
+  const dayOfWeekNextYear = may1NextYear.getDay()
+  const daysUntilFridayNextYear = dayOfWeekNextYear <= 5 ? 5 - dayOfWeekNextYear : 7 - dayOfWeekNextYear + 5
+  const firstFridayNextYear = new Date(targetYear, 4, 1 + daysUntilFridayNextYear)
+  
+  return firstFridayNextYear
 }
 
 function calculateTimeLeft(targetDate: Date): TimeLeft {
