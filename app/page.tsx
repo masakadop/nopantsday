@@ -166,9 +166,9 @@ export default function Home() {
             <p className="text-sm text-muted-foreground">毎年世界中で開催される</p>
           </div>
           <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 border border-border">
-            <div className="text-3xl mb-2">📅</div>
-            <h3 className="font-semibold text-foreground mb-1">1980年代に誕生</h3>
-            <p className="text-sm text-muted-foreground">テキサス州オースティン発祥</p>
+            <div className="text-3xl mb-2">👖</div>
+            <h3 className="font-semibold text-foreground mb-1">パンツなしで乗車</h3>
+            <p className="text-sm text-muted-foreground">下着姿で地下鉄に乗るイベント</p>
           </div>
           <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 border border-border">
             <div className="text-3xl mb-2">😄</div>
